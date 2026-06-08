@@ -6,6 +6,6 @@ import java.util.Optional;
 import com.sarvesh.ResumeAnalyser.auth.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
-    boolean existsByEmail(String email);
+    public Optional<User> findByEmail(String email);
+    public boolean existsByEmail(String email);
 }
