@@ -1,5 +1,6 @@
 package com.sarvesh.ResumeAnalyser.auth.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sarvesh.ResumeAnalyser.auth.dto.AuthResponse;
@@ -11,8 +12,13 @@ import com.sarvesh.ResumeAnalyser.auth.repository.UserRepository;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
-    public AuthService(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+    public AuthService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder) {
+
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     public AuthResponse register(RegisterRequest registerRequest) {
         if(userRepository.existsByEmail(registerRequest.getEmail())) {
@@ -22,7 +28,9 @@ public class AuthService {
         User user = new User();
         user.setName(registerRequest.getName());
         user.setEmail(registerRequest.getEmail());
-        user.setPassword(registerRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(
+                registerRequest.getPassword()
+        ));
         userRepository.save(user);
         return new AuthResponse("Registration Successful");
     }
@@ -31,7 +39,7 @@ public class AuthService {
         .findByEmail(request.getEmail())
         .orElseThrow(() ->
                 new RuntimeException("User not found"));
-        if(!user.getPassword().equals(request.getPassword())) {
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid Credentials");
         }
         return new AuthResponse("Login Successful");
