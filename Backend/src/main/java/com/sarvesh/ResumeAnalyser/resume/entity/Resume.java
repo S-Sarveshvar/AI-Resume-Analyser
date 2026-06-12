@@ -25,5 +25,5 @@ public class Resume {
     @ManyToOne
     private User user;
     private LocalDateTime uploadedAt;
-    private String filepath;
+    private String filePath;
 }
