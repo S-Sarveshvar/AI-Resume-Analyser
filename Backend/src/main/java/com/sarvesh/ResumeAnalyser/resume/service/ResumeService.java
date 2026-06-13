@@ -24,6 +24,7 @@ public class ResumeService {
         this.userRepository = userRepository;
     }
     public ResumeUploadResponse uploadResume(MultipartFile file) throws IOException {
+        // Receive uploaded PDF -> Validate it -> Store PDF on disk -> Store metadata in database -> Return success response
         if(file.isEmpty()) throw new RuntimeException("File not found");
         String fileName = file.getOriginalFilename();
         if(fileName == null) {
@@ -32,8 +33,8 @@ public class ResumeService {
             );
         }
         Path path = Paths.get("uploads/resumes", fileName);
-        Files.copy(file.getInputStream(), path);
-        User user = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
+        Files.copy(file.getInputStream(),path);
+        User user = userRepository.findById(3L).orElseThrow(() -> new RuntimeException("User not found"));
         Resume resume = new Resume();
         resume.setFileName(fileName);
         resume.setFilePath(path.toString());
