@@ -19,9 +19,11 @@ import com.sarvesh.ResumeAnalyser.auth.entity.User;
 public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
-    public ResumeService(ResumeRepository resumeRepository, UserRepository userRepository) {
+    private final PdfExtractionService pdfExtractionService;
+    public ResumeService(ResumeRepository resumeRepository, UserRepository userRepository, PdfExtractionService pdfExtractionService) {
         this.resumeRepository = resumeRepository;
         this.userRepository = userRepository;
+        this.pdfExtractionService = pdfExtractionService;
     }
     public ResumeUploadResponse uploadResume(MultipartFile file) throws IOException {
         // Receive uploaded PDF -> Validate it -> Store PDF on disk -> Store metadata in database -> Return success response
@@ -34,13 +36,14 @@ public class ResumeService {
         }
         Path path = Paths.get("uploads/resumes", fileName);
         Files.copy(file.getInputStream(),path);
-        User user = userRepository.findById(3L).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
         Resume resume = new Resume();
         resume.setFileName(fileName);
         resume.setFilePath(path.toString());
         resume.setUploadedAt(LocalDateTime.now());
         resume.setUser(user);
-        resume.setExtractedText(null);
+        String text = pdfExtractionService.extractText(file);
+        resume.setExtractedText(text);
         resumeRepository.save(resume);
         return new ResumeUploadResponse("Resume uploaded successfully", fileName);
     }
