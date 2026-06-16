@@ -2,6 +2,7 @@ package com.sarvesh.ResumeAnalyser.analysis.entity;
 
 import com.sarvesh.ResumeAnalyser.resume.entity.Resume;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,8 +21,11 @@ public class Analysis {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer atsScore;
+    @Column(columnDefinition = "TEXT")
     private String summary;
+    @Column(columnDefinition = "TEXT")
     private String skills;
+    @Column(columnDefinition = "TEXT")
     private String suggestions;
     @OneToOne
     private Resume resume;

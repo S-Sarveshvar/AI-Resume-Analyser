@@ -2,6 +2,7 @@ package com.sarvesh.ResumeAnalyser.resume.entity;
 
 import com.sarvesh.ResumeAnalyser.auth.entity.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class Resume {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fileName;
+    @Column(columnDefinition = "TEXT")
     private String extractedText;
     @ManyToOne
     private User user;
