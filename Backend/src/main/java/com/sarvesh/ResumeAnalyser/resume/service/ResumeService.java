@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,9 @@ public class ResumeService {
                     "Invalid file"
             );
         }
-        Path path = Paths.get("uploads/resumes", fileName);
+        String extension = fileName.substring(fileName.lastIndexOf("."));
+        String id = UUID.randomUUID() + extension;
+        Path path = Paths.get("uploads/resumes", id);
         Files.copy(file.getInputStream(),path);
         User user = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
         Resume resume = new Resume();
