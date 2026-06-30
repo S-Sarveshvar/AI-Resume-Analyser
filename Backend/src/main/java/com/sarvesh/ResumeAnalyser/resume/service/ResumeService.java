@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +41,11 @@ public class ResumeService {
         String id = UUID.randomUUID() + extension;
         Path path = Paths.get("uploads/resumes", id);
         Files.copy(file.getInputStream(),path);
-        User user = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
+        Authentication authentication = SecurityContextHolder
+                                            .getContext()
+                                            .getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
         Resume resume = new Resume();
         resume.setFileName(fileName);
         resume.setFilePath(path.toString());
