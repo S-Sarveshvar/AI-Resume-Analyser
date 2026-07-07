@@ -1,6 +1,7 @@
-package com.sarvesh.ResumeAnalyser.analysis.dto;
+package com.sarvesh.ResumeAnalyser.analysis.dto.request;
 
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
