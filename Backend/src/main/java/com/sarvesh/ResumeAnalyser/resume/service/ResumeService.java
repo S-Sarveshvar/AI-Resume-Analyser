@@ -28,7 +28,7 @@ public class ResumeService {
         this.userRepository = userRepository;
         this.pdfExtractionService = pdfExtractionService;
     }
-    public ResumeUploadResponse uploadResume(MultipartFile file) throws IOException {
+    public Resume saveResume(MultipartFile file) throws IOException {
         // Receive uploaded PDF -> Validate it -> Store PDF on disk -> Store metadata in database -> Return success response
         if(file.isEmpty()) throw new RuntimeException("File not found");
         String fileName = file.getOriginalFilename();
@@ -53,7 +53,14 @@ public class ResumeService {
         resume.setUser(user);
         String text = pdfExtractionService.extractText(file);
         resume.setExtractedText(text);
-        resumeRepository.save(resume);
-        return new ResumeUploadResponse("Resume uploaded successfully", fileName);
+        return resumeRepository.save(resume);
+        
+    }
+    public ResumeUploadResponse uploadResume(MultipartFile file) throws IOException {
+        Resume resume = saveResume(file);
+        return new ResumeUploadResponse(
+                "Resume uploaded successfully",
+                resume.getFileName()
+        );
     }
 }

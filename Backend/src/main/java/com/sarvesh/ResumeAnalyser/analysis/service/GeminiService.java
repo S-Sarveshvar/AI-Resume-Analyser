@@ -2,10 +2,10 @@ package com.sarvesh.ResumeAnalyser.analysis.service;
 import java.util.List;
 import org.springframework.web.client.RestClient;
 
-import com.sarvesh.ResumeAnalyser.analysis.dto.request.Content;
-import com.sarvesh.ResumeAnalyser.analysis.dto.request.GeminiRequest;
-import com.sarvesh.ResumeAnalyser.analysis.dto.request.Part;
-import com.sarvesh.ResumeAnalyser.analysis.dto.response.GeminiResponse;
+import com.sarvesh.ResumeAnalyser.analysis.gemini.request.Content;
+import com.sarvesh.ResumeAnalyser.analysis.gemini.request.GeminiRequest;
+import com.sarvesh.ResumeAnalyser.analysis.gemini.request.Part;
+import com.sarvesh.ResumeAnalyser.analysis.gemini.response.GeminiResponse;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;

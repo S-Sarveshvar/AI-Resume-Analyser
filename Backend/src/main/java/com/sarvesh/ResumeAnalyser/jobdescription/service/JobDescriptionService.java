@@ -22,7 +22,7 @@ public class JobDescriptionService {
         this.jobDescriptionRepository = jobDescriptionRepository;
         this.userRepository = userRepository;
     }
-    public JobDescriptionResponse uploadJobDescription(JobDescriptionRequest jobDescriptionRequest) {
+    public JobDescription saveJobDescription(JobDescriptionRequest jobDescriptionRequest) {
         Authentication authentication = SecurityContextHolder
                                             .getContext()
                                             .getAuthentication();
@@ -32,7 +32,13 @@ public class JobDescriptionService {
         jobDescription.setDescription(jobDescriptionRequest.getDescription());
         jobDescription.setUploadedAt(LocalDateTime.now());
         jobDescription.setUser(user);
-        jobDescriptionRepository.save(jobDescription);
-        return new JobDescriptionResponse("Job Description saved successfully", jobDescription.getId());
+        return jobDescriptionRepository.save(jobDescription);
+    }
+    public JobDescriptionResponse uploadJobDescription(JobDescriptionRequest request) {
+        JobDescription jobDescription = saveJobDescription(request);
+        return new JobDescriptionResponse(
+                "Job Description saved successfully",
+                jobDescription.getId()
+        );
     }
 }

@@ -1,4 +1,4 @@
-package com.sarvesh.ResumeAnalyser.analysis.dto.response;
+package com.sarvesh.ResumeAnalyser.analysis.gemini.response;
 
 import java.util.List;
 
