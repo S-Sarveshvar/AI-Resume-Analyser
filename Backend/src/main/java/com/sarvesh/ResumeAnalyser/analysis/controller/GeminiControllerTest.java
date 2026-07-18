@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/api/gemini")
-public class GeminiController {
+public class GeminiControllerTest {
     private final GeminiService geminiService;
-    public GeminiController(GeminiService geminiService) {
+    public GeminiControllerTest(GeminiService geminiService) {
         this.geminiService = geminiService;
     }
     @PostMapping("/test")

@@ -39,7 +39,7 @@ public class ResumeService {
         }
         String extension = fileName.substring(fileName.lastIndexOf("."));
         String id = UUID.randomUUID() + extension;
-        Path path = Paths.get("uploads/resumes", id);
+        Path path = Paths.get("uploads/resumes", id);  
         Files.copy(file.getInputStream(),path);
         Authentication authentication = SecurityContextHolder
                                             .getContext()
