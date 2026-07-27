@@ -1,5 +1,7 @@
 package com.sarvesh.ResumeAnalyser.analysis.entity;
 
+import java.time.LocalDateTime;
+
 import com.sarvesh.ResumeAnalyser.jobdescription.entity.JobDescription;
 import com.sarvesh.ResumeAnalyser.resume.entity.Resume;
 
@@ -40,4 +42,5 @@ public class Analysis {
     private Resume resume;
     @ManyToOne
     private JobDescription jobDescription;
+    private LocalDateTime createdAt;
 }
