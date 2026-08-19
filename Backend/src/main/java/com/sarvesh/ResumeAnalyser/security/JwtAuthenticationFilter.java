@@ -2,17 +2,14 @@ package com.sarvesh.ResumeAnalyser.security;
 
 import java.io.IOException;
 import java.util.Collections;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.sarvesh.ResumeAnalyser.auth.entity.User;
 import com.sarvesh.ResumeAnalyser.auth.repository.UserRepository;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
