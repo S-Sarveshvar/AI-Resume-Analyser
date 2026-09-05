@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import Button from "../components/common/Button"
+import Navbar from '../components/layout/Navbar'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
@@ -69,20 +71,38 @@ const footerGroups = [
   { heading: 'Company', links: [['About', '#'], ['Privacy', '#'], ['Terms', '#']] },
 ]
 
+const AUTH_TOKEN_KEYS = ['token', 'jwtToken', 'authToken', 'accessToken', 'access_token', 'jwt']
+
+function normalizeToken(token) {
+  return token?.replace(/^Bearer\s+/i, '').trim()
+}
+
+function clearStoredTokens() {
+  AUTH_TOKEN_KEYS.forEach((key) => {
+    localStorage.removeItem(key)
+    sessionStorage.removeItem(key)
+  })
+}
+
 function getStoredToken() {
-  return localStorage.getItem('token')
-    || localStorage.getItem('authToken')
-    || localStorage.getItem('jwt')
-    || sessionStorage.getItem('token')
-    || sessionStorage.getItem('authToken')
-    || sessionStorage.getItem('jwt')
+  for (const key of AUTH_TOKEN_KEYS) {
+    const token = normalizeToken(localStorage.getItem(key) || sessionStorage.getItem(key))
+
+    if (token) {
+      return token
+    }
+  }
+
+  return ''
 }
 
 async function isLoggedIn() {
   const token = getStoredToken()
+
   if (!token) {
     return false
   }
+
   try {
     const response = await fetch(`${API_BASE_URL}/api/analysis`, {
       method: 'GET',
@@ -90,9 +110,15 @@ async function isLoggedIn() {
         Authorization: `Bearer ${token}`,
       },
     })
-    return response.status !== 401 && response.status !== 403
+
+    if (response.status === 401 || response.status === 403) {
+      clearStoredTokens()
+      return false
+    }
+
+    return response.ok || response.status === 405
   } catch {
-    return Boolean(token)
+    return false
   }
 }
 
@@ -110,6 +136,8 @@ const Landing = () => {
   }
 
   return (
+    <>
+    <Navbar/>
     <main className="landing-page">
       <section className="landing-hero">
         <div className="landing-container landing-hero-grid">
@@ -272,6 +300,7 @@ const Landing = () => {
         </div>
       </footer>
     </main>
+    </>
   )
 }
 
@@ -322,9 +351,6 @@ function InterviewIcon() {
   return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="6" r="3" stroke="currentColor" strokeWidth="1.5" /><path d="M3 16c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
 }
 
-function CheckIcon() {
-  return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6l2.5 2.5L10 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-}
 
 function StarIcon() {
   return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l1.5 3.5L12 5.5l-2.5 2.5.7 3.5L7 9.8 4 11.5l.6-3.5L2 5.5l3.5-1L7 1z" fill="currentColor" /></svg>
@@ -335,5 +361,8 @@ function SocialIcon() {
 }
 
 export default Landing
+
+
+
 
 
