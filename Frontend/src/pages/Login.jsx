@@ -53,7 +53,8 @@ export default function Login({ navigate: navigateProp, addToast }) {
         addToast('success', data.message || 'Login successful!')
       }
 
-      navigate('/dashboard')
+      const redirectTo = window.history.state?.usr?.from || '/dashboard'
+      navigate(redirectTo)
     } catch (error) {
       const msg = error.message || 'Unable to login. Please try again.'
       setErrorMessage(msg)

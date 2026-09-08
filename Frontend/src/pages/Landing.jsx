@@ -92,34 +92,33 @@ function getStoredToken() {
       return token
     }
   }
-
   return ''
+}
+
+function isTokenExpired(token) {
+  try {
+    const parts = token.split('.')
+    if (parts.length !== 3) return false
+    const payload = JSON.parse(atob(parts[1]))
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      return true
+    }
+    return false
+  } catch {
+    return false
+  }
 }
 
 async function isLoggedIn() {
   const token = getStoredToken()
-
   if (!token) {
     return false
   }
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/analysis`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (response.status === 401 || response.status === 403) {
-      clearStoredTokens()
-      return false
-    }
-
-    return response.ok || response.status === 405
-  } catch {
+  if (isTokenExpired(token)) {
+    clearStoredTokens()
     return false
   }
+  return true
 }
 
 const Landing = () => {
