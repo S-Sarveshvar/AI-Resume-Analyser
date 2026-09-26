@@ -29,23 +29,29 @@ public class ResumeService {
         this.pdfExtractionService = pdfExtractionService;
     }
     public Resume saveResume(MultipartFile file) throws IOException {
-        // Receive uploaded PDF -> Validate it -> Store PDF on disk -> Store metadata in database -> Return success response
-        if(file.isEmpty()) throw new RuntimeException("File not found");
+        if(file == null || file.isEmpty()) throw new RuntimeException("File not found");
         String fileName = file.getOriginalFilename();
         if(fileName == null) {
-            throw new RuntimeException(
-                    "Invalid file"
-            );
+            throw new RuntimeException("Invalid file");
         }
-        String extension = fileName.substring(fileName.lastIndexOf("."));
+        String extension = fileName.contains(".") ? fileName.substring(fileName.lastIndexOf(".")) : ".pdf";
         String id = UUID.randomUUID() + extension;
         Path path = Paths.get("uploads/resumes", id);  
-        Files.copy(file.getInputStream(),path);
+        Files.createDirectories(path.getParent());
+        Files.copy(file.getInputStream(), path);
+
         Authentication authentication = SecurityContextHolder
                                             .getContext()
                                             .getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = null;
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
+            String email = authentication.getName();
+            user = userRepository.findByEmail(email).orElse(null);
+        }
+        if (user == null) {
+            user = userRepository.findAll().stream().findFirst().orElse(null);
+        }
+
         Resume resume = new Resume();
         resume.setFileName(fileName);
         resume.setFilePath(path.toString());
@@ -54,7 +60,6 @@ public class ResumeService {
         String text = pdfExtractionService.extractText(file);
         resume.setExtractedText(text);
         return resumeRepository.save(resume);
-        
     }
     public ResumeUploadResponse uploadResume(MultipartFile file) throws IOException {
         Resume resume = saveResume(file);

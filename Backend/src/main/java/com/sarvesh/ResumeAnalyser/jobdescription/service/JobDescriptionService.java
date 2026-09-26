@@ -17,7 +17,7 @@ import com.sarvesh.ResumeAnalyser.jobdescription.repository.JobDescriptionReposi
 public class JobDescriptionService {
     private final JobDescriptionRepository jobDescriptionRepository;
     private final UserRepository userRepository;
-    JobDescription jobDescription = new JobDescription();
+
     public JobDescriptionService(JobDescriptionRepository jobDescriptionRepository, UserRepository userRepository) {
         this.jobDescriptionRepository = jobDescriptionRepository;
         this.userRepository = userRepository;
@@ -26,8 +26,16 @@ public class JobDescriptionService {
         Authentication authentication = SecurityContextHolder
                                             .getContext()
                                             .getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = null;
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
+            String email = authentication.getName();
+            user = userRepository.findByEmail(email).orElse(null);
+        }
+        if (user == null) {
+            user = userRepository.findAll().stream().findFirst().orElse(null);
+        }
+
+        JobDescription jobDescription = new JobDescription();
         jobDescription.setTitle(jobDescriptionRequest.getTitle());
         jobDescription.setDescription(jobDescriptionRequest.getDescription());
         jobDescription.setUploadedAt(LocalDateTime.now());

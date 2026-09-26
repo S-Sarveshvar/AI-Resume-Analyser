@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sarvesh.ResumeAnalyser.analysis.dto.AnalysisRequest;
 import com.sarvesh.ResumeAnalyser.analysis.dto.AnalysisResponse;
@@ -39,12 +40,26 @@ public class AnalysisService {
         JobDescription jobDescription = jobDescriptionService.saveJobDescription(new JobDescriptionRequest(analysisRequest.getTitle(), analysisRequest.getDescription()));
         String prompt = buildPrompt(resume, jobDescription);
         String jsonResponse = geminiService.generateContent(prompt);
-        AnalysisResponse response;
+        if (jsonResponse != null) {
+            jsonResponse = jsonResponse.trim();
+            if (jsonResponse.startsWith("```")) {
+                jsonResponse = jsonResponse.replaceAll("^```(?:json)?", "").replaceAll("```$", "").trim();
+            }
+        }
+        AnalysisResponse response = new AnalysisResponse();
         try {
-            response = objectMapper.readValue(jsonResponse, AnalysisResponse.class);
+            JsonNode rootNode = objectMapper.readTree(jsonResponse);
+            response.setAtsScore(rootNode.path("atsScore").asInt(0));
+            response.setInterviewReadinessScore(rootNode.path("interviewReadinessScore").asInt(0));
+            response.setSummary(getTextOrJson(rootNode.path("summary")));
+            response.setIdentifiedSkills(getTextOrJson(rootNode.path("identifiedSkills")));
+            response.setMissingSkills(getTextOrJson(rootNode.path("missingSkills")));
+            response.setSuggestions(getTextOrJson(rootNode.path("suggestions")));
+            response.setLearningRoadmap(getTextOrJson(rootNode.path("learningRoadmap")));
+            response.setRecommendedProjects(getTextOrJson(rootNode.path("recommendedProjects")));
         }
         catch(JsonProcessingException e) {
-            throw new GeminiException("Gemini returned an invalid response.", e);
+            throw new GeminiException("Gemini returned an invalid response: " + e.getMessage(), e);
         }
         Analysis analysis = new Analysis();
         analysis.setAtsScore(response.getAtsScore());
@@ -231,19 +246,18 @@ public class AnalysisService {
             Comments
             Extra text
             JSON must be directly parsable.
-            Use this EXACT schema.
+            Use this EXACT schema format:
             {
-            "atsScore": 0,
-            "summary": "",
-            "identifiedSkills": "",
-            "missingSkills": "",
-            "suggestions": "",
-            "learningRoadmap": "",
-            "recommendedProjects": "",
-            "interviewReadinessScore": 0
+              "atsScore": 85,
+              "interviewReadinessScore": 75,
+              "summary": "Professional assessment of candidate fit...",
+              "identifiedSkills": "[\"Java\", \"Spring Boot\", \"REST APIs\"]",
+              "missingSkills": "[\"Docker\", \"AWS\", \"Kubernetes\"]",
+              "suggestions": "[{\"title\": \"Quantify project achievements\", \"desc\": \"Add measurable results to project descriptions\"}]",
+              "learningRoadmap": "[{\"week\": \"Week 1-2\", \"topic\": \"Docker Fundamentals\", \"desc\": \"Learn container concepts and Dockerfiles\"}]",
+              "recommendedProjects": "[{\"title\": \"E-Commerce Microservices API\", \"desc\": \"Build a REST API with Spring Boot & Docker\", \"techs\": [\"Spring Boot\", \"Docker\", \"AWS\"], \"why\": \"Fills Docker and cloud deployment gaps\", \"difficulty\": \"Intermediate\", \"time\": \"2-3 weeks\"}]"
             }
             Every field must always be present.
-            If information is unavailable, return an empty string ("") rather than omitting the field.
             Return ONLY the JSON object.
             """
         .formatted(
@@ -251,5 +265,15 @@ public class AnalysisService {
                 jobDescription.getTitle(),
                 jobDescription.getDescription()
         );
+    }
+
+    private String getTextOrJson(JsonNode node) {
+        if (node == null || node.isMissingNode() || node.isNull()) {
+            return "";
         }
+        if (node.isValueNode()) {
+            return node.asText();
+        }
+        return node.toString();
+    }
 }
