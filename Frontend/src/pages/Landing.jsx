@@ -43,23 +43,23 @@ const processSteps = [
 
 const testimonials = [
   {
-    name: 'Priya Sharma',
+    name: 'Chitrita K',
     title: 'Backend Engineer at Stripe',
-    avatar: 'PS',
+    avatar: 'CK',
     quote: 'ResumeAI identified three skill gaps I never would have caught on my own. Two weeks later I had Docker and AWS on my resume and cleared the technical screen.',
     score: 'ATS: 91%',
   },
   {
-    name: 'Marcus Chen',
+    name: 'Darshan S',
     title: 'Full Stack Developer at Shopify',
-    avatar: 'MC',
+    avatar: 'DS',
     quote: 'The roadmap was exactly what I needed. Week-by-week learning plan, project recommendations, everything. I went from rejected to offer in six weeks.',
     score: 'ATS: 88%',
   },
   {
-    name: 'Sofia Reyes',
+    name: 'Vibin KK',
     title: 'Data Engineer at Databricks',
-    avatar: 'SR',
+    avatar: 'VK',
     quote: 'I was applying to the same roles for months with no response. After one ResumeAI session, I rewrote three bullet points and got four callbacks in a week.',
     score: 'ATS: 85%',
   },
@@ -68,7 +68,6 @@ const testimonials = [
 const footerGroups = [
   { heading: 'Product', links: [['Features', '#features'], ['How It Works', '#how-it-works'], ['Analysis', '#analysis']] },
   { heading: 'Account', links: [['Login', '/login'], ['Register', '/register']] },
-  { heading: 'Company', links: [['About', '#'], ['Privacy', '#'], ['Terms', '#']] },
 ]
 
 const AUTH_TOKEN_KEYS = ['token', 'jwtToken', 'authToken', 'accessToken', 'access_token', 'jwt']
@@ -129,176 +128,176 @@ const Landing = () => {
     setCheckingAction(actionName)
 
     const authenticated = await isLoggedIn()
-    navigate(authenticated ? '/dashboard' : fallbackPath)
+    navigate(authenticated ? '/analysis/new' : fallbackPath)
 
     setCheckingAction('')
   }
 
   return (
     <>
-    <Navbar/>
-    <main className="landing-page">
-      <section className="landing-hero">
-        <div className="landing-container landing-hero-grid">
-          <div className="landing-hero-copy">
-            <div className="landing-badge">
-              <span className="landing-badge-dot" />
-              AI-Powered Career Intelligence
-            </div>
-            <h1>Turn Your Resume Into Your Career Advantage</h1>
-            <p>
-              Analyze your resume against any job description, discover skill gaps,
-              improve your ATS score, and get a personalized roadmap to become
-              interview-ready.
-            </p>
-            <div className="landing-actions">
-              <button
-                type="button"
-                className="landing-primary-btn"
-                onClick={() => handleProtectedNavigation('/login', 'hero-analysis')}
-                disabled={checkingAction === 'hero-analysis'}
-              >
-                {checkingAction === 'hero-analysis' ? 'Checking...' : 'Analyze My Resume'}
-                <ArrowIcon />
-              </button>
-              <a href="#how-it-works" className="landing-secondary-link">
-                See How It Works
-              </a>
-            </div>
-          </div>
-          {/* <HeroVisual /> */}
-        </div>
-      </section>
-
-      <section className="landing-value-strip">
-        <div className="landing-container landing-value-grid">
-          {valueCards.map(({ icon, title, desc }) => (
-            <article className="landing-value-item" key={title}>
-              <div className="landing-icon-box">{icon}</div>
-              <div>
-                <h2>{title}</h2>
-                <p>{desc}</p>
+      <Navbar />
+      <main className="landing-page">
+        <section className="landing-hero">
+          <div className="landing-container landing-hero-grid">
+            <div className="landing-hero-copy">
+              <div className="landing-badge">
+                <span className="landing-badge-dot" />
+                AI-Powered Career Intelligence
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
+              <h1>Turn Your Resume Into Your Career Advantage</h1>
+              <p>
+                Analyze your resume against any job description, discover skill gaps,
+                improve your ATS score, and get a personalized roadmap to become
+                interview-ready.
+              </p>
+              <div className="landing-actions">
+                <button
+                  type="button"
+                  className="landing-primary-btn"
+                  onClick={() => handleProtectedNavigation('/login', 'hero-analysis')}
+                  disabled={checkingAction === 'hero-analysis'}
+                >
+                  {checkingAction === 'hero-analysis' ? 'Checking...' : 'Analyze My Resume'}
+                  <ArrowIcon />
+                </button>
+                <a href="#how-it-works" className="landing-secondary-link">
+                  See How It Works
+                </a>
+              </div>
+            </div>
+            {/* <HeroVisual /> */}
+          </div>
+        </section>
 
-      <section className="landing-section" id="features">
-        <SectionHeader
-          eyebrow="Features"
-          title="Everything you need to get hired"
-          text="A complete AI toolkit that transforms your resume into a job-landing machine."
-        />
-        <div className="landing-container landing-feature-grid">
-          {features.map(({ icon, title, desc }) => (
-            <article className="landing-feature-card" key={title}>
-              <div className="landing-feature-icon">{icon}</div>
-              <h3>{title}</h3>
-              <p>{desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+        <section className="landing-value-strip">
+          <div className="landing-container landing-value-grid">
+            {valueCards.map(({ icon, title, desc }) => (
+              <article className="landing-value-item" key={title}>
+                <div className="landing-icon-box">{icon}</div>
+                <div>
+                  <h2>{title}</h2>
+                  <p>{desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
 
-      <section className="landing-section landing-section-white" id="how-it-works">
-        <SectionHeader eyebrow="Process" title="How It Works" text="Four steps from upload to offer-ready." />
-        <div className="landing-container landing-process-grid">
-          {processSteps.map(({ step, title, desc }, index) => (
-            <article className="landing-process-step" key={step}>
-              {index < processSteps.length && <span className="landing-process-line" />}
-              <div className="landing-step-number">{step}</div>
-              <h3>{title}</h3>
-              <p>{desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+        <section className="landing-section" id="features">
+          <SectionHeader
+            eyebrow="Features"
+            title="Everything you need to get hired"
+            text="A complete AI toolkit that transforms your resume into a job-landing machine."
+          />
+          <div className="landing-container landing-feature-grid">
+            {features.map(({ icon, title, desc }) => (
+              <article className="landing-feature-card" key={title}>
+                <div className="landing-feature-icon">{icon}</div>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
-      <section className="landing-section">
-        <SectionHeader eyebrow="Testimonials" title="Loved by job seekers" text="Real people. Real results." />
-        <div className="landing-container landing-testimonial-grid">
-          {testimonials.map(({ name, title, avatar, quote, score }) => (
-            <article className="landing-testimonial-card" key={name}>
-              <div className="landing-stars" aria-label="5 star rating">
-                {[...Array(5)].map((_, index) => (
-                  <StarIcon key={index} />
+        <section className="landing-section landing-section-white" id="how-it-works">
+          <SectionHeader eyebrow="Process" title="How It Works" text="Four steps from upload to offer-ready." />
+          <div className="landing-container landing-process-grid">
+            {processSteps.map(({ step, title, desc }, index) => (
+              <article className="landing-process-step" key={step}>
+                {index < processSteps.length && <span className="landing-process-line" />}
+                <div className="landing-step-number">{step}</div>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="landing-section">
+          <SectionHeader eyebrow="Testimonials" title="Loved by job seekers" text="Real people. Real results." />
+          <div className="landing-container landing-testimonial-grid">
+            {testimonials.map(({ name, title, avatar, quote, score }) => (
+              <article className="landing-testimonial-card" key={name}>
+                <div className="landing-stars" aria-label="5 star rating">
+                  {[...Array(5)].map((_, index) => (
+                    <StarIcon key={index} />
+                  ))}
+                </div>
+                <p className="landing-quote">&quot;{quote}&quot;</p>
+                <div className="landing-testimonial-author">
+                  <div className="landing-author-group">
+                    <span className="landing-avatar">{avatar}</span>
+                    <div>
+                      <h3>{name}</h3>
+                      <p>{title}</p>
+                    </div>
+                  </div>
+                  <span className="landing-score-pill">{score}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="landing-final-cta" id="analysis">
+          <div className="landing-container landing-final-inner">
+            <h2>Ready to improve your next application?</h2>
+            <p>Join thousands of job seekers who landed their target role with ResumeAI.</p>
+            <button
+              type="button"
+              className="landing-primary-btn"
+              onClick={() => handleProtectedNavigation('/login', 'final-analysis')}
+              disabled={checkingAction === 'final-analysis'}
+            >
+              {checkingAction === 'final-analysis' ? 'Checking...' : 'Start Your Analysis'}
+              <ArrowIcon />
+            </button>
+          </div>
+        </section>
+
+        <footer className="landing-footer">
+          <div className="landing-container landing-footer-grid">
+            <div>
+              <div className="landing-footer-logo">
+                <span><LogoMark /></span>
+                ResumeAI
+              </div>
+              <p>AI-powered resume analysis and career readiness for modern job seekers.</p>
+              <div className="landing-social-links">
+                {['Twitter', 'LinkedIn', 'GitHub'].map((social) => (
+                  <a key={social} href="#" aria-label={social}>
+                    <SocialIcon />
+                  </a>
                 ))}
               </div>
-              <p className="landing-quote">&quot;{quote}&quot;</p>
-              <div className="landing-testimonial-author">
-                <div className="landing-author-group">
-                  <span className="landing-avatar">{avatar}</span>
-                  <div>
-                    <h3>{name}</h3>
-                    <p>{title}</p>
-                  </div>
-                </div>
-                <span className="landing-score-pill">{score}</span>
+            </div>
+            {footerGroups.map(({ heading, links }) => (
+              <div className="landing-footer-group" key={heading}>
+                <h3>{heading}</h3>
+                {links.map(([label, href]) => (
+                  href.startsWith('#') ? (
+                    <a key={label} href={href}>{label}</a>
+                  ) : (
+                    <button
+                      type="button"
+                      key={label}
+                      onClick={() => handleProtectedNavigation(href, label)}
+                      disabled={checkingAction === label}
+                    >
+                      {label}
+                    </button>
+                  )
+                ))}
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="landing-final-cta" id="analysis">
-        <div className="landing-container landing-final-inner">
-          <h2>Ready to improve your next application?</h2>
-          <p>Join thousands of job seekers who landed their target role with ResumeAI.</p>
-          <button
-            type="button"
-            className="landing-primary-btn"
-            onClick={() => handleProtectedNavigation('/login', 'final-analysis')}
-            disabled={checkingAction === 'final-analysis'}
-          >
-            {checkingAction === 'final-analysis' ? 'Checking...' : 'Start Your Analysis'}
-            <ArrowIcon />
-          </button>
-        </div>
-      </section>
-
-      <footer className="landing-footer">
-        <div className="landing-container landing-footer-grid">
-          <div>
-            <div className="landing-footer-logo">
-              <span><LogoMark /></span>
-              ResumeAI
-            </div>
-            <p>AI-powered resume analysis and career readiness for modern job seekers.</p>
-            <div className="landing-social-links">
-              {['Twitter', 'LinkedIn', 'GitHub'].map((social) => (
-                <a key={social} href="#" aria-label={social}>
-                  <SocialIcon />
-                </a>
-              ))}
-            </div>
+            ))}
           </div>
-          {footerGroups.map(({ heading, links }) => (
-            <div className="landing-footer-group" key={heading}>
-              <h3>{heading}</h3>
-              {links.map(([label, href]) => (
-                href.startsWith('#') ? (
-                  <a key={label} href={href}>{label}</a>
-                ) : (
-                  <button
-                    type="button"
-                    key={label}
-                    onClick={() => handleProtectedNavigation(href, label)}
-                    disabled={checkingAction === label}
-                  >
-                    {label}
-                  </button>
-                )
-              ))}
-            </div>
-          ))}
-        </div>
-        <div className="landing-container landing-footer-bottom">
-          <p>Copyright 2026 ResumeAI, Inc. All rights reserved.</p>
-          <p>Built to help you land your dream job.</p>
-        </div>
-      </footer>
-    </main>
+          <div className="landing-container landing-footer-bottom">
+            <p>Copyright 2026 ResumeAI, Inc. All rights reserved.</p>
+            <p>Built to help you land your dream job by Sarveshvar S.</p>
+          </div>
+        </footer>
+      </main>
     </>
   )
 }

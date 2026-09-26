@@ -45,15 +45,14 @@ export default function Login({ navigate: navigateProp, addToast }) {
       if (token) {
         localStorage.setItem('token', token)
       }
-      if (data.user) {
-        localStorage.setItem('user', JSON.stringify(data.user))
-      }
+      const userData = data.user || { email, name: email.split('@')[0] }
+      localStorage.setItem('user', JSON.stringify(userData))
 
       if (typeof addToast === 'function') {
         addToast('success', data.message || 'Login successful!')
       }
 
-      const redirectTo = window.history.state?.usr?.from || '/dashboard'
+      const redirectTo = window.history.state?.usr?.from || '/analysis/new'
       navigate(redirectTo)
     } catch (error) {
       const msg = error.message || 'Unable to login. Please try again.'

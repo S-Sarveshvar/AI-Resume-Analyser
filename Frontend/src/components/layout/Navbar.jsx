@@ -56,9 +56,9 @@ const Navbar = () => {
             <div className="navbar-actions">
               {loggedIn ? (
                 <>
-                  <Link to="/dashboard">
+                  <Link to="/analysis/new">
                     <Button variant="ghost">
-                      Dashboard
+                      New Analysis
                     </Button>
                   </Link>
                   <Button onClick={handleLogout}>
