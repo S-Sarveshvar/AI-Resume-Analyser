@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import Button from "../components/common/Button"
 import Navbar from '../components/layout/Navbar'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+import { API_BASE_URL } from '../config/api'
 
 const valueCards = [
   { icon: <ScoreIcon />, title: 'ATS Resume Analysis', desc: 'Instant compatibility scores against any job description.' },
