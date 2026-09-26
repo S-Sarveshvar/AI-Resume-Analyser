@@ -31,15 +31,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        try {
             String token = header.substring(7);
             String email = jwtService.extractEmail(token);
-            User user = userRepository.findByEmail(email).orElse(null);
-            if(user!=null && jwtService.isTokenValid(token, user.getEmail())) {
-                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-                Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
-                securityContext.setAuthentication(authentication);  
-                SecurityContextHolder.setContext(securityContext);
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                User user = userRepository.findByEmail(email).orElse(null);
+                if (user != null && jwtService.isTokenValid(token, user.getEmail())) {
+                    SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                    securityContext.setAuthentication(authentication);  
+                    SecurityContextHolder.setContext(securityContext);
+                }
             }
-            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            // Invalid or unparseable token headers should fall back to unauthenticated cleanly
+        }
+        filterChain.doFilter(request, response);
     }
 }
